@@ -1,0 +1,61 @@
+
+import evas1.*
+import pilotos1.*
+import cuartel1.*
+describe "test de nerv"{
+
+    test "El EVA-01 no puede usarse más de 3 veces seguidas sin recargarse."{
+        eva01.consecDeSincro()
+        eva01.consecDeSincro()
+        eva01.consecDeSincro()
+        assert.equals(25, eva01.energia())
+    }
+
+    test "En modo ataque, el EVA-02 otorga 3 de entrenamiento"{
+        eva02.cambiarModo(ataque)
+        eva02.consecDeSincro()
+        assert.equals(3, eva02.puntosOtorgados())
+
+    }
+    test "En modo ataque, el EVA-02 otorga 3 de entrenamiento y consume 20 de energía."{
+        eva02.cambiarModo(ataque)
+        eva02.consecDeSincro()
+        assert.equals(20, ataque.consumo())
+
+    }
+
+    test"Shinji puede al inicio sincronizar con el EVA-00."{
+        shinji.descansar()
+        assert.that(shinji.puedeSincronizarCon(eva00))
+    }
+
+    test"Probar que Rei no puede realizar más de 5 sincronizaciones en total."{
+        assert.equals(5,rei.cantidadTotalDeSincrosPosibles())
+    }
+
+    test "El cálculo del promedio de puntos de entrenamiento de los pilotos es correcto."{
+        nerv.registrarPilotos(shinji)
+        nerv.registrarPilotos(rei)
+        nerv.registrarPilotos(asuka)
+        assert.equals(2.33333, nerv.promedioDePuntosDeEntrenPilotos())
+    }
+
+    test "Verificar que cada EVA puede ser usado por al menos un piloto registrado en el cuartel."{
+        nerv.registrarPilotos(shinji)
+        nerv.registrarPilotos(rei)
+        nerv.registrarPilotos(asuka)
+        nerv.sincronizarUnPilotoConTodosLosEvas(rei)
+        assert.that(nerv.puedeSincronizarUnPilotoConTodosLosEvas(rei))
+    }
+
+    test "Que un piloto se considera satisfecho según su definición personal."{
+        nerv.registrarPilotos(shinji)
+        nerv.registrarPilotos(rei)
+        nerv.registrarPilotos(asuka)
+        rei.puedeSincronizarCon(eva00)
+        rei.consecDeSincro(eva00)
+        assert.that(rei.estaSatisfecho())
+
+    }
+
+}
